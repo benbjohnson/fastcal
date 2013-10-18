@@ -1,5 +1,9 @@
 package fastcal
 
+import (
+  "sort"
+)
+
 type Lookup struct {
   epoch int64
   hour int
@@ -10,6 +14,32 @@ type Lookup struct {
 
 func (t *Lookup) Set(epoch int64) {
   t.epoch = epoch
+
+  i := sort.Search(len(year_starts), func(i int) bool { return year_starts[i] >= epoch })
+  t.year = 1999 + i
+  offset := epoch - year_starts[i-1]
+
+  if dst[i-1] {
+    i = sort.Search(len(dst_months), func(i int) bool { return dst_months[i] >= offset })
+    offset = offset - dst_months[i-1]
+  } else {
+    i = sort.Search(len(months), func(i int) bool { return months[i] >= offset })
+    offset = offset - months[i-1]
+  }
+  t.month = i
+  t.day = 1
+
+  for offset > 86400 {
+    t.day += 1
+    offset -= 86400
+  }
+  t.hour = 0
+  for offset > 3600 {
+    t.hour += 1
+    offset -= 3600
+  }
+
+  //fmt.Printf("year is %d, moneth %d, day %d\n", t.year, t.month, t.day)
 }
 
 func (t *Lookup) Hour() int {
@@ -112,4 +142,115 @@ var year_starts = []int64{946684800,
  3502915200,
  3534451200,
  3565987200}
+
+var dst = []bool{true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false,
+ true,
+ false,
+ false,
+ false}
+
+var months= []int64 {0,
+ 2678400,
+ 5097600,
+ 7776000,
+ 10368000,
+ 13046400,
+ 15638400,
+ 18316800,
+ 20995200,
+ 23587200,
+ 26265600,
+ 28857600}
+
+var dst_months = []int64{0,
+ 2678400,
+ 5184000,
+ 7862400,
+ 10454400,
+ 13132800,
+ 15724800,
+ 18403200,
+ 21081600,
+ 23673600,
+ 26352000,
+ 28944000}
 

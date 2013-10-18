@@ -9,7 +9,7 @@ var epoch = 1287429458
 
 // 300ns to convert
 func BenchmarkStdlibEpochToCalendar(b *testing.B) {
-  t := GoStdlib{}
+  t := Lookup{}
 
   for i := 0; i < b.N; i++ {
     t.Set((int64)(epoch))
