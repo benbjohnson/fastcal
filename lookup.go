@@ -27,19 +27,14 @@ func (t *Lookup) Set(epoch int64) {
     offset = offset - months[i-1]
   }
   t.month = i
-  t.day = 1
 
-  for offset > 86400 {
-    t.day += 1
-    offset -= 86400
-  }
-  t.hour = 0
-  for offset > 3600 {
-    t.hour += 1
-    offset -= 3600
-  }
+  i = sort.Search(len(days), func(i int) bool { return days[i] >= offset })
+  t.day = i+1
+  offset -= days[i]
 
-  //fmt.Printf("year is %d, moneth %d, day %d\n", t.year, t.month, t.day)
+  i = sort.Search(len(hours), func(i int) bool { return hours[i] >= offset })
+  t.hour = i+1
+
 }
 
 func (t *Lookup) Hour() int {
@@ -254,3 +249,58 @@ var dst_months = []int64{0,
  26352000,
  28944000}
 
+var days = []int64 {0,
+ 86400,
+ 172800,
+ 259200,
+ 345600,
+ 432000,
+ 518400,
+ 604800,
+ 691200,
+ 777600,
+ 864000,
+ 950400,
+ 1036800,
+ 1123200,
+ 1209600,
+ 1296000,
+ 1382400,
+ 1468800,
+ 1555200,
+ 1641600,
+ 1728000,
+ 1814400,
+ 1900800,
+ 1987200,
+ 2073600,
+ 2160000,
+ 2246400,
+ 2332800,
+ 2419200,
+ 2505600,
+ 2592000 }
+
+var hours = []int64{0,
+ 3600,
+ 7200,
+ 10800,
+ 14400,
+ 18000,
+ 21600,
+ 25200,
+ 28800,
+ 32400,
+ 36000,
+ 39600,
+ 43200,
+ 46800,
+ 50400,
+ 54000,
+ 57600,
+ 61200,
+ 64800,
+ 68400,
+ 72000,
+ 75600,
+ 79200}
