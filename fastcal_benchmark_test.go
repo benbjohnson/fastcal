@@ -19,3 +19,12 @@ func BenchmarkStdlibEpochToCalendar(b *testing.B) {
 		_ = t.Year()
 	}
 }
+
+func BenchmarkYearSearch(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		for _, time := range year_starts[1:] {
+			yearSearch(time - 2*30*24*3600)
+			yearSearch(time - 8*30*24*3600)
+		}
+	}
+}
