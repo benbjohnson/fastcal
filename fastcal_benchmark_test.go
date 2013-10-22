@@ -28,3 +28,13 @@ func BenchmarkYearSearch(b *testing.B) {
 		}
 	}
 }
+
+func BenchmarkBinarySearch(b *testing.B) {
+	slice := year_starts[:]
+	for i := 0; i < b.N; i++ {
+		for _, time := range year_starts[1:] {
+			binarySearch(slice, time-2*30*24*3600)
+			binarySearch(slice, time-8*30*24*3600)
+		}
+	}
+}
