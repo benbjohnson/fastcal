@@ -10,27 +10,43 @@ type Lookup struct {
 
 // yearSearch finds the index in year_starts for the year containing @x
 func yearSearch(time uint) int {
+	//	fmt.Println("search: ", time)
 	index := int(year_starts_len * time / last_year)
+	var start, end int
+	step := 2
 	if year_starts[index] > time {
-		for index--; year_starts[index] > time; {
+		start = index - 1
+		end = start
+		//		fmt.Println("down: ", start, end, year_starts[index])
+		for ; time < year_starts[start]; step++ {
+			start, end = start-step, start
+			//			fmt.Println(start, end, year_starts[end])
 		}
-		return index
 	} else {
-		for index++; year_starts[index] <= time; {
+		start = index
+		end = index + 1
+		//		fmt.Println("up: ", start, end, year_starts[index])
+		for ; year_starts[end] <= time; step++ {
+			start, end = end, end+step
+			//			fmt.Println(start, end, year_starts[start])
 		}
-		return index - 1
 	}
+	//	fmt.Println("binary: ", start, end)
+	return start + binarySearch(year_starts[start:end+1], time)
 }
 
 func binarySearch(buckets []uint, time uint) int {
 	start := 0
 	end := len(buckets) - 1
+	//	fmt.Println("b-search: ", time, buckets)
 	for {
 		index := (end + start + 1) / 2
 		if time < buckets[index] {
 			end = index - 1
+			//			fmt.Println("end: ", end, buckets[end])
 		} else if index > start && time > buckets[index] {
 			start = index
+			//			fmt.Println("start: ", end, buckets[start])
 		} else {
 			return index
 		}
