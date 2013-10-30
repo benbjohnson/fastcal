@@ -11,14 +11,23 @@ go test -test.bench=.*
 CPU Profiling
 =============
 
-build the test binary:
-go test -c
+Build the test binary:
 
-run benchmark, generating profile:
-./fastcal.test -test.bench=.* -test.cpuprofile=prof.out 
+```sh
+$ go test -c
+```
 
-open pprof
-go tool pprof fastcal.test prof.out
-top10
+Run benchmark, generating profile:
+
+```sh
+$ ./fastcal.test -test.bench=.* -test.cpuprofile=prof.out 
+```
+
+Open pprof:
+
+```sh
+$ go tool pprof fastcal.test prof.out
+> top10
+```
 
 
